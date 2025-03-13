@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company List</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header>
+        <h1 class="logo">Go<span class="highlight">Hire</span></h1>
+        <input type="text" id="search" placeholder="Search for Companies..." onkeyup="searchCompanies()">
+    </header>
+
+    <div class="container">
+        <!-- Sidebar Filters -->
+        <aside>
+            <h3>Filters</h3>
+            <label><input type="checkbox" name="industry" value="Tech"> Tech</label>
+            <label><input type="checkbox" name="industry" value="Finance"> Finance</label>
+            <label><input type="checkbox" name="industry" value="Health"> Health</label>
+        </aside>
+
+        <!-- Company List -->
+        <main>
+            <div class="company-grid">
+                <% companies.forEach(company => { %>
+                    <div class="company-card">
+                        <img src="<%= company.logo %>" alt="<%= company.name %> Logo">
+                        <h2><%= company.name %></h2>
+                        <p><strong>Industry:</strong> <%= company.industry %></p>
+                        <p><strong>Location:</strong> <%= company.location %></p>
+                        <p class="desc"><%= company.description %></p>
+                        <a href="<%= company.website %>" target="_blank" class="btn">Visit Website</a>
+                    </div>
+                <% }) %>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function searchCompanies() {
+            let input = document.getElementById('search').value.toLowerCase();
+            let cards = document.querySelectorAll('.company-card');
+
+            cards.forEach(card => {
+                let name = card.querySelector("h2").innerText.toLowerCase();
+                card.style.display = name.includes(input) ? "block" : "none";
+            });
+        }
+    </script>
+</body>
+</html>

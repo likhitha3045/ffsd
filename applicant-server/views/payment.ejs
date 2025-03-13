@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <link rel="stylesheet" href="/public/styles.css"> <!-- Link to external CSS -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .payment-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .pay-btn {
+            width: 100%;
+            background: #667eea;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .pay-btn:hover {
+            background: #5a67d8;
+        }
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <h2>Payment Method</h2>
+        <form action="/process-payment" method="POST" onsubmit="return validatePaymentForm()">
+            <div class="input-group">
+                <label>Select Payment Method</label>
+                  <select name="paymentMethod" id="paymentMethod" onchange="togglePaymentFields()">
+                    <option value="card">Credit/Debit Card</option>
+                    <option value="netbanking">Net Banking</option>
+                    <option value="upi">UPI</option>
+                </select>
+            </div>
+            
+            <!-- Card Payment Fields -->
+            <div id="card-fields">
+                <div class="input-group">
+                    <label>Cardholder Name</label>
+                    <input type="text" name="cardholder" id="cardholder">
+                </div>
+                <div class="input-group">
+                    <label>Card Number</label>
+                    <input type="text" name="cardNumber" id="cardNumber" maxlength="16">
+                </div>
+                <div class="input-group">
+                    <label>Expiration Date</label>
+                    <input type="month" name="expiry" id="expiry">
+                </div>
+                <div class="input-group">
+                    <label>CVV</label>
+                    <input type="text" name="cvv" id="cvv" maxlength="3">
+                </div>
+            </div>
+            
+            <!-- Net Banking Fields -->
+            <div id="netbanking-fields" style="display: none;">
+                <div class="input-group">
+                    <label>Select Bank</label>
+                    <select name="bank">
+                        <option value="hdfc">HDFC Bank</option>
+                        <option value="sbi">State Bank of India</option>
+                        <option value="icici">ICICI Bank</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- UPI Payment Fields -->
+            <div id="upi-fields" style="display: none;">
+                <div class="input-group">
+                    <label>UPI ID</label>
+                    <input type="text" name="upi_id" id="upi_id">
+                </div>
+            </div>
+            
+            <button type="submit" class="pay-btn">Pay Now</button>
+        </form>
+    </div>
+    
+    <script>
+        document.querySelector("form").addEventListener("submit", function(event) {
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            
+            if (paymentMethod === "card") {
+                const cardholder = document.querySelector('input[name="cardholder"]').value;
+                const cardNumber = document.querySelector('input[name="cardNumber"]').value;
+                const expiry = document.querySelector('input[name="expiry"]').value;
+                const cvv = document.querySelector('input[name="cvv"]').value;
+    
+                if (!cardholder || !cardNumber || !expiry || !cvv) {
+                    alert("Please fill in all card details.");
+                    event.preventDefault(); // Stop form submission
+                }
+            }
+    
+            if (paymentMethod === "netbanking") {
+                const bank = document.querySelector('select[name="bank"]').value;
+                if (!bank) {
+                    alert("Please select a bank.");
+                    event.preventDefault();
+                }
+            }
+    
+            if (paymentMethod === "upi") {
+                const upiId = document.querySelector('input[name="upi_id"]').value;
+                if (!upiId) {
+                    alert("Please enter a valid UPI ID.");
+                    event.preventDefault();
+                }
+            }
+        });
+    </script>
+    
+</body>
+</html>
